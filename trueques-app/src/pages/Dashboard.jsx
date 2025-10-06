@@ -4,75 +4,39 @@ import { FaSignOutAlt, FaUsers, FaBoxOpen } from 'react-icons/fa';
 
 function Dashboard({ user, setUser }) {
   return (
-    <div
-      style={{
-        padding: '40px',
-        background: 'linear-gradient(135deg, #f1efecff, #fcb69f)',
-        minHeight: '100vh',
-        fontFamily: 'Arial, sans-serif',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          background: '#fff',
-          padding: '20px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        }}
-      >
-        <h2 style={{ margin: 0, color: '#333' }}>👋 Hola, {user.nombre}</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-orange-200 p-10 font-sans">
+      {/* Header */}
+      <div className="flex justify-between items-center bg-white p-5 rounded-xl shadow-md">
+        <h2 className="text-gray-800 text-xl">Hola, {user.nombre}</h2>
         <button
           onClick={() => setUser(null)}
-          style={{
-            background: '#ff4d4d',
-            border: 'none',
-            color: '#fff',
-            padding: '10px 20px',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
+          className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
         >
           <FaSignOutAlt /> Cerrar sesión
         </button>
       </div>
 
-      <div style={{ marginTop: '30px' }}>
-        <div
-          style={{
-            background: '#fff',
-            padding: '20px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            marginBottom: '20px',
-          }}
-        >
-          <h3 style={{ color: '#007bff', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <FaUsers /> lista de Usuarios registrados
-          </h3>
-          <UserList />
-        </div>
+      {/* Contenido principal */}
+      <div className="mt-10 space-y-6">
+        {/* Funciones solo para Administrador */}
+        {user.rol === 'Administrador' && (
+          <div className="bg-white p-5 rounded-xl shadow-md">
+            <h3 className="text-blue-600 text-lg flex items-center gap-2">
+              <FaUsers /> Lista de usuarios registrados
+            </h3>
+            <UserList />
+          </div>
+        )}
 
-        <div
-          style={{
-            background: '#fff',
-            padding: '20px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          }}
-        >
-          <h3 style={{ color: '#28a745', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Funciones para todos los usuarios */}
+        <div className="bg-white p-5 rounded-xl shadow-md">
+          <h3 className="text-green-600 text-lg flex items-center gap-2">
             <FaBoxOpen /> Artículos disponibles para intercambiar
           </h3>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            <li style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}>📘 Libro de matemáticas</li>
-            <li style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}>🚲 Bicicleta</li>
-            <li style={{ padding: '8px 0' }}>🎸 Guitarra</li>
+          <ul className="list-none p-0 mt-2 space-y-2">
+            <li className="border-b border-gray-200 pb-1">📘 Libro de matemáticas</li>
+            <li className="border-b border-gray-200 pb-1">🚲 Bicicleta</li>
+            <li>🎸 Guitarra</li>
           </ul>
         </div>
       </div>
