@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 
+// Agregamos el rol a cada usuario
 const usuariosMock = [
-  { id: 1, nombre: 'Brayan', correo: 'brayan@gmail.com' },
-  { id: 2, nombre: 'Fernando', correo: 'fernando@gmail.com' },
+  { id: 1, nombre: 'Brayan', correo: 'brayan@gmail.com', rol: 'Administrador' },
+  { id: 2, nombre: 'Fernando', correo: 'fernando@gmail.com', rol: 'Usuario' },
 ];
 
 function Login({ setUser }) {
   const [correo, setCorreo] = useState('');
 
   const handleLogin = () => {
-    const foundUser = usuariosMock.find((u) => u.correo === correo);
+    // Comparación case-insensitive
+    const foundUser = usuariosMock.find(
+      (u) => u.correo.toLowerCase() === correo.toLowerCase()
+    );
     if (foundUser) {
-      setUser(foundUser);
+      setUser(foundUser); // ahora incluye el rol
     } else {
       alert('Usuario no encontrado');
     }
@@ -38,9 +42,9 @@ function Login({ setUser }) {
           onChange={(e) => setCorreo(e.target.value)}
           style={{
             width: '100%',
-            padding: '12px 12px 12px 40px', 
+            padding: '12px 12px 12px 40px',
             borderRadius: '8px',
-            border: '1px solid #ccc', 
+            border: '1px solid #ccc',
             fontSize: '1rem',
             boxSizing: 'border-box',
           }}
