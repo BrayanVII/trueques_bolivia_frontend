@@ -8,7 +8,6 @@ interface SidebarProps {
 export interface Filters {
   categorias: string[];
   estados: string[];
-  ratingMin: number;
 }
 
 const CATEGORIAS = ['Deportes', 'Tecnología', 'Libros', 'Ropa', 'Hogar', 'Otros'];
@@ -18,7 +17,6 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
   const [filters, setFilters] = useState<Filters>({
     categorias: [],
     estados: ['Disponible'],
-    ratingMin: 0,
   });
   const [openMobile, setOpenMobile] = useState(false);
 
@@ -38,12 +36,6 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
       : [...filters.estados, estado];
     
     const nuevosFiltros = { ...filters, estados: nuevos };
-    setFilters(nuevosFiltros);
-    onFilterChange?.(nuevosFiltros);
-  };
-
-  const handleRatingChange = (rating: number) => {
-    const nuevosFiltros = { ...filters, ratingMin: rating };
     setFilters(nuevosFiltros);
     onFilterChange?.(nuevosFiltros);
   };
@@ -115,36 +107,11 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
           </div>
         </div>
 
-        <div className="border-t my-6"></div>
-
-        {/* Rating */}
-        <div className="mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span>⭐</span> Rating Mínimo
-          </h3>
-          <div className="space-y-2">
-            {[0, 3, 3.5, 4, 4.5].map((rating) => (
-              <label key={rating} className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="rating"
-                  checked={filters.ratingMin === rating}
-                  onChange={() => handleRatingChange(rating)}
-                  className="w-4 h-4 text-blue-600"
-                />
-                <span className="text-gray-700 group-hover:text-blue-600 transition">
-                  {rating === 0 ? 'Cualquiera' : `${rating}+ estrellas`}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
         {/* Botón limpiar filtros */}
         <button
           onClick={() => {
-            setFilters({ categorias: [], estados: ['Disponible'], ratingMin: 0 });
-            onFilterChange?.({ categorias: [], estados: ['Disponible'], ratingMin: 0 });
+            setFilters({ categorias: [], estados: ['Disponible'] });
+            onFilterChange?.({ categorias: [], estados: ['Disponible'] });
           }}
           className="w-full mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-semibold transition"
         >
