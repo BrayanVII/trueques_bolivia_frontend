@@ -2,16 +2,10 @@ import { useState } from 'react';
 import { Navbar } from '../components/Navbar';
 import { ArticleList } from '../components/ArticleList';
 import { Sidebar } from '../components/Sidebar';
+import type { Filters } from '../components/Sidebar';
 import type { Articulo } from '../types';
 
-// Definición del tipo Filters
-interface Filters {
-  categorias: string[];
-  estados: string[];
-  ratingMin: number;
-}
 
-// ✨ DATOS DIRECTAMENTE EN EL COMPONENTE
 const ARTICULOS: Articulo[] = [
   {
     id: '1',
@@ -32,7 +26,7 @@ const ARTICULOS: Articulo[] = [
       verificado: true,
       descripcion: 'Amante del intercambio. Rápido y confiable.',
     },
-    fechaPublicacion: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    fechaPublicacion: new Date(),
     vistas: 45,
     interes: 3,
   },
@@ -55,18 +49,38 @@ const ARTICULOS: Articulo[] = [
       verificado: true,
       descripcion: 'Vendedora de ropa y accesorios.',
     },
-    fechaPublicacion: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    fechaPublicacion: new Date(),
     vistas: 89,
     interes: 7,
   },
-  // ... resto de los artículos como antes
+  {
+    id: '3',
+    nombre: 'Libro de Matemáticas Avanzadas',
+    descripcion: 'Libro universitario en buen estado, ideal para estudiantes de ingeniería.',
+    imagen: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&h=400&fit=crop',
+    categoria: 'Libros',
+    estado: 'pendiente',
+    usuario: {
+      id: '3',
+      nombre: 'Carlos López',
+      email: 'carlos@email.com',
+      avatar: 'https://i.pravatar.cc/150?img=3',
+      ubicacion: 'Cochabamba, Bolivia',
+      rating: 4.7,
+      articulosDisponibles: 3,
+      articulosIntercambiados: 10,
+      verificado: false,
+      descripcion: 'Apasionado por la lectura.',
+    },
+    fechaPublicacion: new Date(Date.now() - 86400000),
+    vistas: 32,
+    interes: 2,
+  },
 ];
-
 export function Home() {
   const [filters, setFilters] = useState<Filters>({
     categorias: [],
     estados: ['Disponible'],
-    ratingMin: 0,
   });
 
   const articulosFiltrados = ARTICULOS.filter((art) => {
@@ -74,26 +88,22 @@ export function Home() {
     const cumpleEstado = filters.estados.includes(
       art.estado.charAt(0).toUpperCase() + art.estado.slice(1)
     );
-    const cumpleRating = art.usuario.rating >= filters.ratingMin;
 
-    return cumpleCategoria && cumpleEstado && cumpleRating;
+    return cumpleCategoria && cumpleEstado;
   });
 
   const handleArticleClick = (articulo: Articulo) => {
     console.log('Artículo seleccionado:', articulo);
-    // Aquí irá la navegación a detalles del artículo
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      
+
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            ¿Qué estás buscando hoy?
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">¿Qué estás buscando hoy?</h1>
           <p className="text-lg md:text-xl opacity-90">
             Intercambia tus artículos y encuentra lo que necesitas en tu comunidad
           </p>
@@ -101,30 +111,23 @@ export function Home() {
       </div>
 
       {/* Contenido Principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <Sidebar onFilterChange={setFilters} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        {/* Sidebar */}
+        <div className="lg:col-span-1">
+          <Sidebar onFilterChange={setFilters} />
+        </div>
+
+        {/* Artículos */}
+        <div className="lg:col-span-3">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Artículos Disponibles</h2>
+            <p className="text-gray-600">
+              Mostrando {articulosFiltrados.length} de {ARTICULOS.length} artículos
+            </p>
           </div>
 
-          {/* Artículos */}
-          <div className="lg:col-span-3">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                Artículos Disponibles
-              </h2>
-              <p className="text-gray-600">
-                Mostrando {articulosFiltrados.length} de {ARTICULOS.length} artículos
-              </p>
-            </div>
-
-            <ArticleList
-              articulos={articulosFiltrados}
-              onArticleClick={handleArticleClick}
-            />
-          </div>
+          <ArticleList articulos={articulosFiltrados} onArticleClick={handleArticleClick} />
         </div>
       </div>
     </div>
