@@ -1,8 +1,19 @@
 import { useState } from 'react';
-import { Menu, X, Home, Bell, Mail, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Menu, X, Home, Bell, Mail, User, LogOut } from 'lucide-react';
 
 export function Navbar() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    // Limpiar datos del usuario
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Redirigir al login usando navigate
+    navigate('/');
+  };
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -13,11 +24,11 @@ export function Navbar() {
           <div className="flex items-center gap-2 cursor-pointer group">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg group-hover:shadow-lg transition">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 1v6h8V1H8zm-3 8v6h4V9H5zm6 0v6h4V9h-4zm6 0v6h4V9h-4z"/>
+                <path d="M8 1v6h8V1H8zm-3 8v6h4V9H5zm6 0v6h4V9h-4zm6 0v6h4V9h-4z" />
               </svg>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Trueques
+              Trueques Bolivia
             </span>
           </div>
 
@@ -36,11 +47,26 @@ export function Navbar() {
               <Bell className="w-5 h-5 text-gray-600" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
+
             <button className="p-2 hover:bg-gray-100 rounded-lg transition">
               <Mail className="w-5 h-5 text-gray-600" />
             </button>
+
             <button className="p-2 hover:bg-gray-100 rounded-lg transition">
               <User className="w-5 h-5 text-gray-600" />
+            </button>
+
+            {/* Separador */}
+            <div className="h-6 w-px bg-gray-300"></div>
+
+            {/* Botón Cerrar Sesión - Desktop */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md"
+              title="Cerrar Sesión"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Cerrar Sesión</span>
             </button>
           </div>
 
@@ -61,18 +87,33 @@ export function Navbar() {
               placeholder="Buscar artículos..."
               className="w-full px-4 py-2 rounded-lg border border-gray-300 mt-4"
             />
+
             <div className="flex flex-col gap-2 mt-4">
               <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition">
                 <Home className="w-5 h-5" />
                 Inicio
               </button>
+
               <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition">
                 <Bell className="w-5 h-5" />
                 Notificaciones
               </button>
+
               <button className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition">
                 <User className="w-5 h-5" />
                 Perfil
+              </button>
+
+              {/* Separador */}
+              <div className="border-t my-2"></div>
+              
+              {/* Botón Cerrar Sesión - Mobile */}
+              <button 
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition font-semibold"
+              >
+                <LogOut className="w-5 h-5" />
+                Cerrar Sesión
               </button>
             </div>
           </div>
