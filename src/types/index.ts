@@ -9,6 +9,7 @@ export interface Usuario {
   articulosIntercambiados: number;
   descripcion?: string;
   verificado?: boolean;
+  rol?: 'usuario' | 'administrador';
 }
 
 export interface Articulo {
