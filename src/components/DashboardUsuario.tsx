@@ -27,8 +27,6 @@ export const DashboardUsuario = () => {
   const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
   const [modalDetalleOpen, setModalDetalleOpen] = useState(false);
   const [oferta, setOferta] = useState<Oferta>({ monto: 0, mensaje: "" });
-
-  // Bloquear scroll cuando el modal está abierto
   useEffect(() => {
     document.body.style.overflow = formOpen || modalDetalleOpen ? "hidden" : "auto";
   }, [formOpen, modalDetalleOpen]);
@@ -77,10 +75,8 @@ export const DashboardUsuario = () => {
   return (
     <div className="min-h-screen w-full bg-gray-100 flex flex-col relative">
       <main className="flex-1 p-4 max-w-7xl mx-auto space-y-8">
-        {/* HOME */}
         <Home />
 
-        {/* LISTA DE PRODUCTOS */}
         {productos.length > 0 && (
           <div>
             <h2 className="text-xl font-bold text-gray-700 mb-4">
@@ -103,7 +99,6 @@ export const DashboardUsuario = () => {
                   <div className="p-4">
                     <h3 className="text-lg font-bold text-gray-800">{p.titulo}</h3>
                     <p className="text-gray-600 mt-1 text-sm">{p.descripcion}</p>
-                    {/* BOTÓN DE AÑADIR OFERTA */}
                     <div className="mt-3">
                       <button 
                         onClick={(e) => {
@@ -123,7 +118,7 @@ export const DashboardUsuario = () => {
         )}
       </main>
 
-      {/* BOTÓN FLOTANTE FIJO DENTRO DEL CONTENEDOR */}
+
       <button
         onClick={() => setFormOpen(true)}
         className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-xl hover:bg-blue-700 transition-all z-50"
@@ -131,7 +126,6 @@ export const DashboardUsuario = () => {
         <Plus size={28} />
       </button>
 
-      {/* MODAL DE DETALLE DEL PRODUCTO Y OFERTAS */}
       {modalDetalleOpen && productoSeleccionado && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
@@ -142,7 +136,6 @@ export const DashboardUsuario = () => {
               <X size={24} />
             </button>
 
-            {/* IMAGEN DEL PRODUCTO */}
             {productoSeleccionado.imagen && (
               <img
                 src={productoSeleccionado.imagen}
@@ -151,16 +144,13 @@ export const DashboardUsuario = () => {
               />
             )}
 
-            {/* DETALLES */}
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               {productoSeleccionado.titulo}
             </h2>
             <p className="text-gray-600 mb-6">{productoSeleccionado.descripcion}</p>
 
-            {/* SEPARADOR */}
             <div className="border-t border-gray-200 my-4"></div>
 
-            {/* FORMULARIO DE OFERTA */}
             <h3 className="text-xl font-semibold mb-4 text-gray-800">
               Hacer una oferta
             </h3>
@@ -210,11 +200,9 @@ export const DashboardUsuario = () => {
         </div>
       )}
 
-      {/* MODAL CON FONDO BLANCO Y ANIMACIÓN */}
       {formOpen && (
         <div className="fixed inset-0 flex justify-center items-center p-4 z-50 transition-opacity duration-300 ease-out">
           <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl relative transform transition-transform duration-300 ease-out scale-100">
-            {/* CERRAR */}
             <button
               onClick={() => setFormOpen(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-black"
@@ -224,8 +212,6 @@ export const DashboardUsuario = () => {
             <h2 className="text-xl font-semibold mb-4 text-center">
               Añadir Nuevo Producto
             </h2>
-
-            {/* CUADRADO PARA SUBIR IMAGEN */}
             <label className="w-full flex justify-center mb-4 cursor-pointer">
               <div className="w-48 h-48 bg-gray-200 border-2 border-dashed border-gray-400 rounded-lg flex flex-col items-center justify-center hover:bg-gray-300 transition-all">
                 {imagePreview ? (
@@ -249,8 +235,6 @@ export const DashboardUsuario = () => {
                 />
               </div>
             </label>
-
-            {/* CAMPOS DEL PRODUCTO */}
             <form onSubmit={publicarProducto} className="space-y-3">
               <input
                 type="text"
