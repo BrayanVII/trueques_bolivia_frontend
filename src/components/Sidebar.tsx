@@ -42,20 +42,15 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
 
   return (
     <>
-      {/* Botón Mobile */}
       <button
         onClick={() => setOpenMobile(!openMobile)}
         className="lg:hidden mb-4 w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold"
       >
         {openMobile ? 'Cerrar Filtros' : 'Mostrar Filtros'}
       </button>
-
-      {/* Sidebar */}
       <div className={`${
         openMobile ? 'block' : 'hidden'
       } lg:block bg-white rounded-xl p-6 h-fit sticky top-20 shadow-md`}>
-        
-        {/* Botón cerrar mobile */}
         {openMobile && (
           <button
             onClick={() => setOpenMobile(false)}
@@ -64,8 +59,6 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
             <X className="w-5 h-5" />
           </button>
         )}
-
-        {/* Categorías */}
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span>🏷️</span> Categorías
@@ -84,10 +77,7 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
             ))}
           </div>
         </div>
-
         <div className="border-t my-6"></div>
-
-        {/* Estado */}
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span>📊</span> Estado
@@ -106,8 +96,6 @@ export function Sidebar({ onFilterChange }: SidebarProps) {
             ))}
           </div>
         </div>
-
-        {/* Botón limpiar filtros */}
         <button
           onClick={() => {
             setFilters({ categorias: [], estados: ['Disponible'] });
