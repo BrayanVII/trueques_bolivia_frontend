@@ -7,11 +7,8 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    // Limpiar datos del usuario
     localStorage.clear();
     sessionStorage.clear();
-    
-    // Redirigir al login usando navigate
     navigate('/');
   };
 
@@ -19,8 +16,6 @@ export function Navbar() {
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          
-          {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer group">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg group-hover:shadow-lg transition">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -31,8 +26,6 @@ export function Navbar() {
               Trueques Bolivia
             </span>
           </div>
-
-          {/* Búsqueda - Desktop */}
           <div className="hidden md:flex flex-1 mx-8">
             <input
               type="text"
@@ -40,8 +33,6 @@ export function Navbar() {
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
           </div>
-
-          {/* Iconos - Desktop */}
           <div className="hidden md:flex items-center gap-4">
             <button className="p-2 hover:bg-gray-100 rounded-lg transition relative">
               <Bell className="w-5 h-5 text-gray-600" />
@@ -56,10 +47,7 @@ export function Navbar() {
               <User className="w-5 h-5 text-gray-600" />
             </button>
 
-            {/* Separador */}
             <div className="h-6 w-px bg-gray-300"></div>
-
-            {/* Botón Cerrar Sesión - Desktop */}
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md"
@@ -69,8 +57,6 @@ export function Navbar() {
               <span>Cerrar Sesión</span>
             </button>
           </div>
-
-          {/* Menú Mobile */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
@@ -78,8 +64,6 @@ export function Navbar() {
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
-
-        {/* Menú Mobile Desplegable */}
         {menuOpen && (
           <div className="md:hidden pb-4 border-t">
             <input
@@ -103,11 +87,7 @@ export function Navbar() {
                 <User className="w-5 h-5" />
                 Perfil
               </button>
-
-              {/* Separador */}
               <div className="border-t my-2"></div>
-              
-              {/* Botón Cerrar Sesión - Mobile */}
               <button 
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition font-semibold"
