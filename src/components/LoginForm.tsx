@@ -1,7 +1,5 @@
-// src/components/LoginForm.tsx
 import React, { useState } from "react";
 
-// --- Iconos SVG ---
 const SharedUserIcon = ({ size = 24, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -49,7 +47,6 @@ const CheckCircleIcon = ({ size = 24, className = "" }) => (
   </svg>
 );
 
-// --- Tipos ---
 type Rol = "usuario" | "administrador";
 
 export interface UsuarioAutenticado {
@@ -66,7 +63,6 @@ export interface UsuarioAutenticado {
   token?: string;
 }
 
-// --- Usuarios de prueba ---
 const usuariosMock: UsuarioAutenticado[] = [
   {
     id: "1",
@@ -94,7 +90,6 @@ const usuariosMock: UsuarioAutenticado[] = [
   },
 ];
 
-// --- Inputs personalizados ---
 interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   Icon: React.ElementType;
 }
@@ -123,7 +118,6 @@ const GenderSelect: React.FC<GenderSelectProps> = ({ value, onChange }) => (
   </div>
 );
 
-// --- Modal de Éxito ---
 interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -159,7 +153,6 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, nombre }) 
   );
 };
 
-// --- Componente Principal ---
 interface LoginFormProps {
   onLogin: (usuario: UsuarioAutenticado) => void;
 }
@@ -179,7 +172,6 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [nuevoUsuarioRegistrado, setNuevoUsuarioRegistrado] = useState<UsuarioAutenticado | null>(null);
 
-  // Validaciones
   const validarEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -208,13 +200,10 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
     setError("");
 
     if (modoRegistro) {
-      // Validación de campos vacíos
       if (!nombre || !apellidoPaterno || !email || !password || !confirmPassword || !cedula || !telefono || !genero) {
         setError("⚠️ Todos los campos son obligatorios");
         return;
       }
-
-      // Validación de nombre
       if (!validarNombre(nombre)) {
         setError("⚠️ El nombre debe tener al menos 2 caracteres");
         return;
@@ -224,45 +213,31 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
         setError("⚠️ El apellido paterno debe tener al menos 2 caracteres");
         return;
       }
-
-      // Validación de cédula
       if (!validarCedula(cedula)) {
         setError("⚠️ La cédula debe contener entre 6 y 10 dígitos");
         return;
       }
-
-      // Validación de teléfono
       if (!validarTelefono(telefono)) {
         setError("⚠️ El teléfono debe contener entre 7 y 10 dígitos");
         return;
       }
-
-      // Validación de email
       if (!validarEmail(email)) {
         setError("⚠️ Por favor ingresa un correo electrónico válido");
         return;
       }
-
-      // Validación de contraseña
       if (!validarPassword(password)) {
         setError("⚠️ La contraseña debe tener al menos 6 caracteres");
         return;
       }
-
-      // Validación de coincidencia de contraseñas
       if (password !== confirmPassword) {
         setError("⚠️ Las contraseñas no coinciden");
         return;
       }
-
-      // Verificar si el email ya existe
       const emailExiste = usuariosMock.some(u => u.email === email);
       if (emailExiste) {
         setError("⚠️ Este correo electrónico ya está registrado");
         return;
       }
-
-      // Crear nuevo usuario
       const nuevoUsuario: UsuarioAutenticado = {
         id: Date.now().toString(),
         nombre: `${nombre} ${apellidoPaterno} ${apellidoMaterno}`.trim(),
@@ -275,12 +250,8 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
         articulosIntercambiados: 0,
         rol: "usuario",
       };
-
-      // Mostrar modal de éxito
       setNuevoUsuarioRegistrado(nuevoUsuario);
       setShowSuccessModal(true);
-
-      // Limpiar formulario
       setNombre("");
       setApellidoPaterno("");
       setApellidoMaterno("");
@@ -290,15 +261,12 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
       setPassword("");
       setConfirmPassword("");
       setGenero("");
-
-      // Redirigir después de 2 segundos
       setTimeout(() => {
         setShowSuccessModal(false);
         onLogin(nuevoUsuario);
       }, 2000);
 
     } else {
-      // Modo Login
       if (!email || !password) {
         setError("⚠️ Por favor completa todos los campos");
         return;
@@ -308,8 +276,6 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
         setError("⚠️ Por favor ingresa un correo electrónico válido");
         return;
       }
-
-      // Validación real de email + password
       const usuario = usuariosMock.find(
         (u) => u.email === email && u.password === password
       );
@@ -405,15 +371,11 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
           </p>
         </form>
       </div>
-
-      {/* Modal de Éxito */}
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={handleSuccessModalClose}
         nombre={nuevoUsuarioRegistrado?.nombre || ""}
       />
-
-      {/* Estilos para animaciones */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; }
