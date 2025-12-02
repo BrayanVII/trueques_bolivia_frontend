@@ -1,4 +1,4 @@
-import type { Articulo } from '../types'; // 👈 import tipo-only
+import type { Articulo } from '../types';
 import { ArticleCard } from './ArticleCard';
 
 interface ArticleListProps {
