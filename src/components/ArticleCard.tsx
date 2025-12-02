@@ -1,4 +1,3 @@
-// cSpell:ignore Articulo articulo hace días Imagen semanas
 import type { Articulo } from '../types';
 import { Heart, MapPin, Calendar, Tag, X, User, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
@@ -57,15 +56,12 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
         onClick={onClick}
         className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group"
       >
-        {/* Imagen del artículo */}
         <div className="relative overflow-hidden h-48 bg-gray-200">
           <img
             src={articulo.imagen}
             alt={articulo.nombre}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
-
-          {/* Badge de estado */}
           <div className="absolute top-3 left-3">
             <span
               className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
@@ -75,8 +71,6 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
               {articulo.estado}
             </span>
           </div>
-
-          {/* Botón Like */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -88,35 +82,22 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
               className={`w-5 h-5 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
             />
           </button>
-
-          {/* Número de vistas */}
           <div className="absolute bottom-3 right-3 bg-black/50 text-white px-2 py-1 rounded text-xs">
             👁 {articulo.vistas} vistas
           </div>
         </div>
-
-        {/* Contenido del artículo */}
         <div className="p-4">
-          {/* Categoría */}
           <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">
             {articulo.categoria}
           </div>
-
-          {/* Título */}
           <h3 className="text-lg font-bold text-gray-800 line-clamp-2 mb-2">
             {articulo.nombre}
           </h3>
-
-          {/* Descripción */}
           <p className="text-gray-600 text-sm line-clamp-2 mb-3">{articulo.descripcion}</p>
-
-          {/* Fecha de publicación */}
           <div className="flex items-center gap-1 text-gray-500 text-xs mb-4">
             <Calendar className="w-4 h-4" />
             {formatDate(new Date(articulo.fechaPublicacion))}
           </div>
-
-          {/* Información del usuario */}
           <div className="border-t pt-3 flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <img
@@ -134,7 +115,6 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
             </div>
           </div>
 
-          {/* BOTÓN AÑADIR OFERTA */}
           <button
             onClick={handleOpenModal}
             className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 transition-all font-semibold"
@@ -144,20 +124,15 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
           </button>
         </div>
       </div>
-
-      {/* MODAL DE DETALLE Y OFERTAS */}
       {modalOpen && (
         <div className="fixed inset-0 bg-white bg-opacity-95 flex justify-center items-center p-4 z-50 animate-fadeIn">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative animate-slideUp">
-            {/* Botón Cerrar */}
             <button
               onClick={handleCloseModal}
               className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition z-10"
             >
               <X size={24} className="text-gray-600" />
             </button>
-
-            {/* Imagen del Producto */}
             <div className="relative h-80 bg-gray-200">
               <img
                 src={articulo.imagen}
@@ -174,19 +149,12 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
                 </span>
               </div>
             </div>
-
-            {/* Contenido */}
             <div className="p-6">
-              {/* Categoría y Título */}
               <div className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-2">
                 {articulo.categoria}
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-3">{articulo.nombre}</h2>
-              
-              {/* Descripción */}
               <p className="text-gray-700 text-base leading-relaxed mb-6">{articulo.descripcion}</p>
-
-              {/* Estadísticas */}
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="bg-blue-50 rounded-lg p-3 text-center">
                   <div className="text-2xl mb-1">👁</div>
@@ -204,8 +172,6 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
                   <div className="text-xs text-gray-500">Publicado</div>
                 </div>
               </div>
-
-              {/* Información del Vendedor */}
               <div className="bg-gray-50 rounded-xl p-5 mb-6">
                 <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
                   <User size={20} className="text-blue-600" />
@@ -230,11 +196,7 @@ export function ArticleCard({ articulo, onClick }: ArticleCardProps) {
                   </div>
                 </div>
               </div>
-
-              {/* Separador */}
               <div className="border-t-2 border-gray-200 my-6"></div>
-
-              {/* Formulario de Oferta */}
               <div className="bg-green-50 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <TrendingUp size={24} className="text-green-600" />
