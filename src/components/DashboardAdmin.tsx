@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-// ==================== TIPOS ACTUALIZADOS ====================
 interface Usuario {
   id: string;
   nombre: string;
@@ -50,7 +49,7 @@ interface ConfirmationState {
   onConfirm: () => void;
 }
 
-// ==================== DATOS DE EJEMPLO ====================
+// DATOS DE EJEMPLO
 const USUARIOS_INICIALES: UsuarioAdmin[] = [
   {
     id: '1',
@@ -153,10 +152,8 @@ const ARTICULOS_INICIALES: Articulo[] = [
   },
   
 ];
-// ==================== COMPONENTE PRINCIPAL ====================
 export const DashboardAdmin: React.FC = () => {
   const navigate = useNavigate();
-  // -------------------- ESTADOS --------------------
   const [vista, setVista] = useState<"inicio" | "usuarios" | "articulos" | "reportes" | "configuracion">("inicio");
   const [editingUser, setEditingUser] = useState<UsuarioAdmin | null>(null);
 
@@ -191,18 +188,11 @@ export const DashboardAdmin: React.FC = () => {
     correo: "", 
     rol: "Usuario" 
   });
-  // ==================== FUNCIÓN DE CERRAR SESIÓN ====================
-  // 🔥 ASEGÚRATE DE QUE ESTA FUNCIÓN ESTÉ AQUÍ 🔥
   const handleLogout = () => {
-    // Limpiar todos los datos
     localStorage.clear();
     sessionStorage.clear();
-    
-    // Redirigir al login (ruta "/")
     navigate('/');
   };
-
-  // ==================== FUNCIONES DE MODALES ====================
   const openErrorModal = (message: string) => setErrorModal({ message, isOpen: true });
   const closeErrorModal = () => setErrorModal({ message: "", isOpen: false });
 
@@ -210,8 +200,6 @@ export const DashboardAdmin: React.FC = () => {
     setConfirmation({ isOpen: true, title, message, onConfirm });
   };
   const closeConfirmation = () => setConfirmation(null);
-
-  // ==================== FUNCIONES DE USUARIOS ====================
   const handleToggleUsuario = (id: string) => {
     setUsuarios(prevUsuarios =>
       prevUsuarios.map(u =>
@@ -273,7 +261,6 @@ export const DashboardAdmin: React.FC = () => {
     );
   };
 
-  // ==================== FUNCIONES DE ARTÍCULOS ====================
   const handleAddArticulo = () => {
     if (!newArticulo.nombre || !newArticulo.categoria) {
       openErrorModal("Por favor completa el Nombre y selecciona una Categoría para el artículo.");
@@ -309,7 +296,6 @@ export const DashboardAdmin: React.FC = () => {
     );
   };
 
-  // ==================== FILTROS Y DATOS PARA GRÁFICAS ====================
   const filteredUsuarios = usuarios.filter(u =>
     u.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     u.correo.toLowerCase().includes(searchTerm.toLowerCase())
@@ -323,12 +309,9 @@ export const DashboardAdmin: React.FC = () => {
   ).map(([name, value]) => ({ name, value }));
   
   const PIE_COLORS = ['#0284c7', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#14b8a6'];
-
-  // ==================== RENDER ====================
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100 font-sans">
       
-      {/* SIDEBAR */}
       <aside className={`${sidebarOpen ? "w-64" : "w-20"} bg-slate-900 text-white flex flex-col transition-all duration-300 shadow-xl`}>
         <div className="p-6 flex items-center gap-3 border-b border-slate-800">
           <div className="rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 p-2 w-10 h-10 flex items-center justify-center font-bold text-lg">T</div>
@@ -350,9 +333,7 @@ export const DashboardAdmin: React.FC = () => {
         </nav>
       </aside>
 
-      {/* MAIN */}
       <main className="flex-1 flex flex-col overflow-hidden">
-        {/* HEADER */}
         <header className="bg-white p-6 border-b shadow-md flex items-center justify-between">
           <div>
             <h2 className="text-3xl">
@@ -371,7 +352,6 @@ export const DashboardAdmin: React.FC = () => {
                 <p className="text-xs text-gray-500">Administrador</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-lg shadow-md">B</div>
-            {/* 🔥 AGREGA ESTO AQUÍ 🔥 */}
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md"
@@ -380,12 +360,9 @@ export const DashboardAdmin: React.FC = () => {
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Cerrar Sesión</span>
             </button>
-            {/* 🔥 FIN DE LA SECCIÓN A AGREGAR 🔥 */}
           </div>
         </div>
       </header>
-      
-        {/* CONTENIDO DINÁMICO */}
         <section className="flex-1 overflow-auto p-8">
           {vista === "inicio" && (
             <VistaInicio usuarios={usuarios} articulos={articulos} categoriasData={categoriesData} pieColors={PIE_COLORS} />
@@ -423,7 +400,6 @@ export const DashboardAdmin: React.FC = () => {
         </section>
       </main>
 
-      {/* MODALES Y CONFIRMACIÓN */}
       {showModalUsuario && (
         <ModalUsuario
           usuario={editingUser}
@@ -444,9 +420,6 @@ export const DashboardAdmin: React.FC = () => {
     </div>
   );
 };
-
-
-// ==================== COMPONENTES AUXILIARES ====================
 
 interface SidebarItemProps {
   icon: React.ElementType;
@@ -534,8 +507,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ title, message, o
     </div>
   </div>
 );
-
-// ==================== VISTAS ====================
 
 interface VistaInicioProps {
   usuarios: UsuarioAdmin[];
@@ -737,7 +708,7 @@ const VistaUsuarios: React.FC<VistaUsuariosProps> = ({
   </div>
 );
 
-// ==================== VISTA DE ARTÍCULOS ACTUALIZADA ====================
+//VISTA DE LOS ARTÍCULOS
 
 interface VistaArticulosProps {
   articulos: Articulo[];
@@ -775,14 +746,12 @@ const VistaArticulos: React.FC<VistaArticulosProps> = ({ articulos, onDelete, on
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {articulos.map((a) => (
           <div key={a.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden">
-            {/* Imagen del artículo */}
             <div className="relative overflow-hidden h-48 bg-gray-200">
               <img
                 src={a.imagen}
                 alt={a.nombre}
                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
               />
-              {/* Badge de estado */}
               <div className="absolute top-3 left-3">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
@@ -792,34 +761,22 @@ const VistaArticulos: React.FC<VistaArticulosProps> = ({ articulos, onDelete, on
                   {a.estado}
                 </span>
               </div>
-              {/* Número de vistas */}
               <div className="absolute bottom-3 right-3 bg-black/50 text-white px-2 py-1 rounded text-xs">
                 👁 {a.vistas} vistas
               </div>
             </div>
-
-            {/* Contenido del artículo */}
             <div className="p-4">
-              {/* Categoría */}
               <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">
                 {a.categoria}
               </div>
-
-              {/* Título */}
               <h3 className="text-lg font-bold text-gray-800 line-clamp-2 mb-2">
                 {a.nombre}
               </h3>
-
-              {/* Descripción */}
               <p className="text-gray-600 text-sm line-clamp-2 mb-3">{a.descripcion}</p>
-
-              {/* Fecha de publicación */}
               <div className="flex items-center gap-1 text-gray-500 text-xs mb-4">
                 <Calendar className="w-4 h-4" />
                 {formatDate(new Date(a.fechaPublicacion))}
               </div>
-
-              {/* Información del usuario */}
               <div className="border-t pt-3 flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <img
@@ -836,8 +793,6 @@ const VistaArticulos: React.FC<VistaArticulosProps> = ({ articulos, onDelete, on
                   </div>
                 </div>
               </div>
-
-              {/* Botón Eliminar */}
               <button
                 onClick={() => onDelete(a.id)}
                 className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2"
@@ -913,7 +868,7 @@ const VistaConfiguracion: React.FC = () => (
   </div>
 );
 
-// ==================== MODALES ====================
+//MODALES
 
 interface ModalUsuarioProps {
   usuario: UsuarioAdmin | null;
