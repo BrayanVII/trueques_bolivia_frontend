@@ -1,4 +1,17 @@
+// src/components/LoginForm.tsx
 import React, { useState } from "react";
+import { authService } from "../services/authService";
+import type { UsuarioAutenticado } from "../types";
+
+// 👇 Definir RegisterResponse aquí
+interface RegisterResponse {
+  id: number;
+  nombre: string;
+  correo: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  roles: Array<{ rol: { nombre: string } }>;
+}
 
 const SharedUserIcon = ({ size = 24, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -46,49 +59,6 @@ const CheckCircleIcon = ({ size = 24, className = "" }) => (
     <polyline points="22 4 12 14.01 9 11.01"></polyline>
   </svg>
 );
-
-type Rol = "usuario" | "administrador";
-
-export interface UsuarioAutenticado {
-  id: string;
-  nombre: string;
-  email: string;
-  password: string;
-  avatar: string;
-  ubicacion: string;
-  rating: number;
-  articulosDisponibles: number;
-  articulosIntercambiados: number;
-  rol: Rol;
-  token?: string;
-}
-
-const usuariosMock: UsuarioAutenticado[] = [
-  {
-    id: "1",
-    nombre: "Juan",
-    email: "juan@gmail.com",
-    password: "12345",
-    avatar: "",
-    ubicacion: "",
-    rating: 5,
-    articulosDisponibles: 3,
-    articulosIntercambiados: 1,
-    rol: "usuario",
-  },
-  {
-    id: "2",
-    nombre: "Admin",
-    email: "brayan@gmail.com",
-    password: "brayan123",
-    avatar: "",
-    ubicacion: "",
-    rating: 5,
-    articulosDisponibles: 0,
-    articulosIntercambiados: 0,
-    rol: "administrador",
-  },
-];
 
 interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   Icon: React.ElementType;
@@ -140,7 +110,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, nombre }) 
           Bienvenido/a <span className="font-semibold text-blue-600">{nombre}</span>
         </p>
         <p className="text-sm text-gray-500 mb-6">
-          Tu cuenta ha sido creada correctamente. Serás redirigido en un momento...
+          Felicidades ahora eres parte de una gran comunidad.
         </p>
         <button
           onClick={onClose}
@@ -171,6 +141,7 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
   const [error, setError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [nuevoUsuarioRegistrado, setNuevoUsuarioRegistrado] = useState<UsuarioAutenticado | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validarEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -195,104 +166,179 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
     return nombre.trim().length >= 2;
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
-    if (modoRegistro) {
-      if (!nombre || !apellidoPaterno || !email || !password || !confirmPassword || !cedula || !telefono || !genero) {
-        setError("⚠️ Todos los campos son obligatorios");
-        return;
-      }
-      if (!validarNombre(nombre)) {
-        setError("⚠️ El nombre debe tener al menos 2 caracteres");
-        return;
-      }
+    try {
+      if (modoRegistro) {
+        // ========== REGISTRO ==========
+        
+        // Validaciones locales
+        if (!nombre || !apellidoPaterno || !email || !password || !confirmPassword || !cedula || !telefono || !genero) {
+          setError("⚠️ Todos los campos son obligatorios");
+          setIsLoading(false);
+          return;
+        }
 
-      if (!validarNombre(apellidoPaterno)) {
-        setError("⚠️ El apellido paterno debe tener al menos 2 caracteres");
-        return;
-      }
-      if (!validarCedula(cedula)) {
-        setError("⚠️ La cédula debe contener entre 6 y 10 dígitos");
-        return;
-      }
-      if (!validarTelefono(telefono)) {
-        setError("⚠️ El teléfono debe contener entre 7 y 10 dígitos");
-        return;
-      }
-      if (!validarEmail(email)) {
-        setError("⚠️ Por favor ingresa un correo electrónico válido");
-        return;
-      }
-      if (!validarPassword(password)) {
-        setError("⚠️ La contraseña debe tener al menos 6 caracteres");
-        return;
-      }
-      if (password !== confirmPassword) {
-        setError("⚠️ Las contraseñas no coinciden");
-        return;
-      }
-      const emailExiste = usuariosMock.some(u => u.email === email);
-      if (emailExiste) {
-        setError("⚠️ Este correo electrónico ya está registrado");
-        return;
-      }
-      const nuevoUsuario: UsuarioAutenticado = {
-        id: Date.now().toString(),
-        nombre: `${nombre} ${apellidoPaterno} ${apellidoMaterno}`.trim(),
-        email,
-        password,
-        avatar: "",
-        ubicacion: "La Paz, Bolivia",
-        rating: 5,
-        articulosDisponibles: 0,
-        articulosIntercambiados: 0,
-        rol: "usuario",
-      };
-      setNuevoUsuarioRegistrado(nuevoUsuario);
-      setShowSuccessModal(true);
-      setNombre("");
-      setApellidoPaterno("");
-      setApellidoMaterno("");
-      setCedula("");
-      setTelefono("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setGenero("");
-      setTimeout(() => {
-        setShowSuccessModal(false);
-        onLogin(nuevoUsuario);
-      }, 2000);
+        if (!validarNombre(nombre)) {
+          setError("⚠️ El nombre debe tener al menos 2 caracteres");
+          setIsLoading(false);
+          return;
+        }
 
-    } else {
-      if (!email || !password) {
-        setError("⚠️ Por favor completa todos los campos");
-        return;
-      }
+        if (!validarNombre(apellidoPaterno)) {
+          setError("⚠️ El apellido paterno debe tener al menos 2 caracteres");
+          setIsLoading(false);
+          return;
+        }
 
-      if (!validarEmail(email)) {
-        setError("⚠️ Por favor ingresa un correo electrónico válido");
-        return;
-      }
-      const usuario = usuariosMock.find(
-        (u) => u.email === email && u.password === password
-      );
+        if (!validarCedula(cedula)) {
+          setError("⚠️ La cédula debe contener entre 6 y 10 dígitos");
+          setIsLoading(false);
+          return;
+        }
 
-      if (usuario) {
-        onLogin(usuario);
+        if (!validarTelefono(telefono)) {
+          setError("⚠️ El teléfono debe contener entre 7 y 10 dígitos");
+          setIsLoading(false);
+          return;
+        }
+
+        if (!validarEmail(email)) {
+          setError("⚠️ Por favor ingresa un correo electrónico válido");
+          setIsLoading(false);
+          return;
+        }
+
+        if (!validarPassword(password)) {
+          setError("⚠️ La contraseña debe tener al menos 6 caracteres");
+          setIsLoading(false);
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          setError("⚠️ Las contraseñas no coinciden");
+          setIsLoading(false);
+          return;
+        }
+
+        // 👇 LLAMADA AL BACKEND - REGISTRO
+        const response: RegisterResponse = await authService.register({
+          nombre,
+          apellidoPaterno,
+          apellidoMaterno,
+          cedula,
+          telefono,
+          correo: email,
+          contrasena: password,
+          genero,
+        });
+
+        // 👇 CORREGIDO: Mapear correctamente los roles del backend
+        let rolesArray: string[] = ["usuario"]; // Default
+        
+        if (response.roles && Array.isArray(response.roles)) {
+          rolesArray = response.roles.map((r: any) => {
+            if (typeof r === 'string') return r;
+            if (r.rol && r.rol.nombre) return r.rol.nombre;
+            return 'usuario';
+          });
+        }
+
+        // Crear el usuario con el formato esperado
+        const nuevoUsuario: UsuarioAutenticado = {
+          id: response.id,
+          nombre: response.nombre || `${nombre} ${apellidoPaterno}`,
+          correo: response.correo,
+          apellidoPaterno: response.apellidoPaterno,
+          apellidoMaterno: response.apellidoMaterno,
+          roles: rolesArray,
+          token: "",
+          avatar: "",
+          ubicacion: "La Paz, Bolivia",
+          rating: 5,
+          articulosDisponibles: 0,
+          articulosIntercambiados: 0,
+        };
+
+        setNuevoUsuarioRegistrado(nuevoUsuario);
+        setShowSuccessModal(true);
+        
+        // Limpiar campos
+        setNombre("");
+        setApellidoPaterno("");
+        setApellidoMaterno("");
+        setCedula("");
+        setTelefono("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setGenero("");
+
       } else {
-        setError("⚠️ Usuario o contraseña incorrectos");
+        // ========== LOGIN ==========
+        
+        if (!email || !password) {
+          setError("⚠️ Por favor completa todos los campos");
+          setIsLoading(false);
+          return;
+        }
+
+        if (!validarEmail(email)) {
+          setError("⚠️ Por favor ingresa un correo electrónico válido");
+          setIsLoading(false);
+          return;
+        }
+
+        // 👇 LLAMADA AL BACKEND - LOGIN
+        const loginResponse = await authService.login({
+          correo: email,
+          contrasena: password,
+        });
+
+        // Crear el usuario con el formato esperado
+        const usuario: UsuarioAutenticado = {
+          id: loginResponse.usuario.id,
+          nombre: loginResponse.usuario.nombre,
+          correo: loginResponse.usuario.correo,
+          apellidoPaterno: loginResponse.usuario.apellidoPaterno,
+          apellidoMaterno: loginResponse.usuario.apellidoMaterno,
+          roles: loginResponse.usuario.roles,
+          token: loginResponse.token,
+          avatar: "",
+          ubicacion: "La Paz, Bolivia",
+          rating: 5,
+          articulosDisponibles: 0,
+          articulosIntercambiados: 0,
+        };
+
+        // Login exitoso
+        onLogin(usuario);
       }
+    } catch (error: any) {
+      // 👇 MANEJO DE ERRORES ESPECÍFICOS
+      console.error('Error en autenticación:', error);
+      
+      if (error.message.includes('Correo no encontrado')) {
+        setError("⚠️ El correo no está registrado");
+      } else if (error.message.includes('Contraseña incorrecta')) {
+        setError("⚠️ La contraseña es incorrecta");
+      } else if (error.message.includes('Credenciales incorrectas')) {
+        setError("⚠️ Usuario o contraseña incorrectos");
+      } else if (error.message.includes('El correo ya está registrado')) {
+        setError("⚠️ Este correo ya está registrado");
+      } else {
+        setError(error.message || "⚠️ Error de conexión con el servidor");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
-    if (nuevoUsuarioRegistrado) {
-      onLogin(nuevoUsuarioRegistrado);
-    }
   };
 
   return (
@@ -306,10 +352,7 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-        <form
-          onSubmit={handleFormSubmit}
-          className="relative bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl w-full max-w-4xl space-y-6"
-        >
+        <div className="relative bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl w-full max-w-4xl space-y-6">
           {!modoRegistro && (
             <h1 className="text-5xl font-extrabold text-black text-center mb-6">
               TRUEQUES BOLIVIA
@@ -329,53 +372,61 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
             </div>
           )}
 
-          {modoRegistro && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <CustomInput Icon={UserIcon} placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-              <CustomInput Icon={UserIcon} placeholder="Apellido Paterno" value={apellidoPaterno} onChange={(e) => setApellidoPaterno(e.target.value)} required />
-              <CustomInput Icon={UserIcon} placeholder="Apellido Materno" value={apellidoMaterno} onChange={(e) => setApellidoMaterno(e.target.value)} />
-              <CustomInput Icon={UserIcon} placeholder="Cédula" value={cedula} onChange={(e) => setCedula(e.target.value)} required />
-              <CustomInput Icon={UserIcon} placeholder="Teléfono" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
-              <CustomInput Icon={MailIcon} placeholder="Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
-              <CustomInput Icon={LockIcon} placeholder="Contraseña (min. 6 caracteres)" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
-              <CustomInput Icon={LockIcon} placeholder="Confirmar Contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" required />
-              <GenderSelect value={genero} onChange={(e) => setGenero(e.target.value)} />
-            </div>
-          )}
+          <div onSubmit={handleFormSubmit as any}>
+            {modoRegistro && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <CustomInput Icon={UserIcon} placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+                <CustomInput Icon={UserIcon} placeholder="Apellido Paterno" value={apellidoPaterno} onChange={(e) => setApellidoPaterno(e.target.value)} required />
+                <CustomInput Icon={UserIcon} placeholder="Apellido Materno" value={apellidoMaterno} onChange={(e) => setApellidoMaterno(e.target.value)} />
+                <CustomInput Icon={UserIcon} placeholder="Cédula" value={cedula} onChange={(e) => setCedula(e.target.value)} required />
+                <CustomInput Icon={UserIcon} placeholder="Teléfono" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
+                <CustomInput Icon={MailIcon} placeholder="Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+                <CustomInput Icon={LockIcon} placeholder="Contraseña (min. 6 caracteres)" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+                <CustomInput Icon={LockIcon} placeholder="Confirmar Contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" required />
+                <GenderSelect value={genero} onChange={(e) => setGenero(e.target.value)} />
+              </div>
+            )}
 
-          {!modoRegistro && (
-            <div className="space-y-4">
-              <CustomInput Icon={MailIcon} placeholder="Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
-              <CustomInput Icon={LockIcon} placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
-            </div>
-          )}
+            {!modoRegistro && (
+              <div className="space-y-4 mb-6">
+                <CustomInput Icon={MailIcon} placeholder="Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+                <CustomInput Icon={LockIcon} placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+              </div>
+            )}
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white p-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition shadow-lg"
-          >
-            {modoRegistro ? "Registrarse" : "Iniciar Sesión"}
-          </button>
-
-          <p className="text-center text-black text-sm font-medium pt-4">
-            {modoRegistro ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
-            <span
-              onClick={() => {
-                setModoRegistro(!modoRegistro);
-                setError("");
-              }}
-              className="text-blue-500 hover:underline cursor-pointer"
+            <button
+              onClick={handleFormSubmit}
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white p-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {modoRegistro ? "Inicia sesión" : "Regístrate"}
-            </span>
-          </p>
-        </form>
+              {isLoading 
+                ? (modoRegistro ? "Registrando..." : "Iniciando sesión...") 
+                : (modoRegistro ? "Registrarse" : "Iniciar Sesión")
+              }
+            </button>
+
+            <p className="text-center text-black text-sm font-medium pt-4">
+              {modoRegistro ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
+              <span
+                onClick={() => {
+                  setModoRegistro(!modoRegistro);
+                  setError("");
+                }}
+                className="text-blue-500 hover:underline cursor-pointer"
+              >
+                {modoRegistro ? "Inicia sesión" : "Regístrate"}
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
+      
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={handleSuccessModalClose}
         nombre={nuevoUsuarioRegistrado?.nombre || ""}
       />
+
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; }
