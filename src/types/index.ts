@@ -1,15 +1,19 @@
+// src/types/index.ts
+
 export interface Usuario {
-  id: string;
+  id: number; // 👈 Cambiado de string a number
   nombre: string;
-  email: string;
-  avatar: string;
-  ubicacion: string;
-  rating: number;
-  articulosDisponibles: number;
-  articulosIntercambiados: number;
+  correo: string; // 👈 Cambiado de email a correo
+  apellidoPaterno?: string; // 👈 NUEVO
+  apellidoMaterno?: string; // 👈 NUEVO
+  avatar?: string;
+  ubicacion?: string;
+  rating?: number;
+  articulosDisponibles?: number;
+  articulosIntercambiados?: number;
   descripcion?: string;
   verificado?: boolean;
-  rol?: 'usuario' | 'administrador';
+  roles: string[]; // 👈 Cambiado de rol único a array de roles
 }
 
 export interface Articulo {
@@ -37,6 +41,7 @@ export interface Truque {
   mensajes?: string[];
 }
 
+// 👇 ACTUALIZADO: UsuarioAutenticado con token obligatorio
 export interface UsuarioAutenticado extends Usuario {
-  token?: string;
+  token: string; // 👈 Cambiado a obligatorio (sin ?)
 }
