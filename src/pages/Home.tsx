@@ -5,7 +5,6 @@ import { Sidebar } from '../components/Sidebar';
 import type { Filters } from '../components/Sidebar';
 import type { Articulo } from '../types';
 
-
 const ARTICULOS: Articulo[] = [
   {
     id: '1',
@@ -15,9 +14,9 @@ const ARTICULOS: Articulo[] = [
     categoria: 'Deportes',
     estado: 'disponible',
     usuario: {
-      id: '1',
+      id: 1, // 👈 Cambiado de '1' a 1
       nombre: 'Juan Pérez',
-      email: 'juan@email.com',
+      correo: 'juan@email.com', // 👈 Cambiado de email a correo
       avatar: 'https://i.pravatar.cc/150?img=1',
       ubicacion: 'La Paz, Bolivia',
       rating: 4.8,
@@ -25,6 +24,7 @@ const ARTICULOS: Articulo[] = [
       articulosIntercambiados: 12,
       verificado: true,
       descripcion: 'Amante del intercambio. Rápido y confiable.',
+      roles: ['usuario'], // 👈 Cambiado de rol a roles
     },
     fechaPublicacion: new Date(),
     vistas: 45,
@@ -38,9 +38,9 @@ const ARTICULOS: Articulo[] = [
     categoria: 'Tecnología',
     estado: 'disponible',
     usuario: {
-      id: '2',
+      id: 2, // 👈 Cambiado
       nombre: 'María García',
-      email: 'maria@email.com',
+      correo: 'maria@email.com', // 👈 Cambiado
       avatar: 'https://i.pravatar.cc/150?img=2',
       ubicacion: 'La Paz, Bolivia',
       rating: 4.9,
@@ -48,6 +48,7 @@ const ARTICULOS: Articulo[] = [
       articulosIntercambiados: 25,
       verificado: true,
       descripcion: 'Vendedora de ropa y accesorios.',
+      roles: ['usuario'], // 👈 Cambiado
     },
     fechaPublicacion: new Date(),
     vistas: 89,
@@ -61,9 +62,9 @@ const ARTICULOS: Articulo[] = [
     categoria: 'Libros',
     estado: 'pendiente',
     usuario: {
-      id: '3',
+      id: 3, // 👈 Cambiado
       nombre: 'Carlos López',
-      email: 'carlos@email.com',
+      correo: 'carlos@email.com', // 👈 Cambiado
       avatar: 'https://i.pravatar.cc/150?img=3',
       ubicacion: 'Cochabamba, Bolivia',
       rating: 4.7,
@@ -71,12 +72,14 @@ const ARTICULOS: Articulo[] = [
       articulosIntercambiados: 10,
       verificado: false,
       descripcion: 'Apasionado por la lectura.',
+      roles: ['usuario'], // 👈 Cambiado
     },
     fechaPublicacion: new Date(Date.now() - 86400000),
     vistas: 32,
     interes: 2,
   },
 ];
+
 export function Home() {
   const [filters, setFilters] = useState<Filters>({
     categorias: [],
