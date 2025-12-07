@@ -1,9 +1,7 @@
-// src/components/LoginForm.tsx
 import React, { useState } from "react";
 import { authService } from "../services/authService";
 import type { UsuarioAutenticado } from "../types";
 
-// 👇 Definir RegisterResponse aquí
 interface RegisterResponse {
   id: number;
   nombre: string;
@@ -175,7 +173,7 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
       if (modoRegistro) {
         // ========== REGISTRO ==========
         
-        // Validaciones locales
+        // Validaciones en el frontend
         if (!nombre || !apellidoPaterno || !email || !password || !confirmPassword || !cedula || !telefono || !genero) {
           setError("⚠️ Todos los campos son obligatorios");
           setIsLoading(false);
@@ -224,7 +222,7 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
           return;
         }
 
-        // 👇 LLAMADA AL BACKEND - REGISTRO
+        // LLAMADA AL BACKEND - REGISTRO
         const response: RegisterResponse = await authService.register({
           nombre,
           apellidoPaterno,
